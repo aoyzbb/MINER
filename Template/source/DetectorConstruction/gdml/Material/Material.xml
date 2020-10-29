@@ -225,7 +225,7 @@
 
 	<material name="Concrete">
 		<!-- 混凝土 -->
-		<D value="2.3" />
+		<D value="3.5" />
 		<fraction n="0.227915" ref="elSilicon" />
 		<fraction n="0.605410" ref="elOxygen" />
 		<fraction n="0.099720" ref="elHydrogen" />
@@ -399,6 +399,18 @@
 		<D value="0.94" />
 		<composite n="1" ref="elCarbon" />
 		<composite n="2" ref="elHydrogen" />
+	</material>
+<material name="HDPolyethylene">
+		<D value="0.95" />
+		<composite n="4" ref="elHydrogen" />
+		<composite n="2" ref="elCarbon" />
+	</material>
+<material name="BoratedPoly">
+		<!-- canpeng www.baidubaike.com-->
+		<D value="0.95" />
+		<fraction n="0.95" ref="HDPolyethylene" />
+		<fraction n="0.05" ref="elBoron" />
+<!--#AO-->
 	</material>
 
 	<material name="MineralOil">
