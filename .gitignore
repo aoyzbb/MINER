@@ -112,7 +112,7 @@ ENV/
 .mypy_cache/
 
 # root file
-*.root
+
 *.dat
 
 #data
@@ -120,3 +120,4 @@ background/
 Exercise/
 RICHSim/
 TRDSim/
+*.json

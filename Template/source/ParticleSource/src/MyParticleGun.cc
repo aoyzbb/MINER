@@ -36,14 +36,17 @@ MyParticleGun::MyParticleGun()
     fParticleGun = new G4ParticleGun(n_particle);
 
     //#PartGun 2. 初始化变量
-    G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition *particle = particleTable->FindParticle("e-");
+   TFile *file = new TFile("neutronFlux.root");
+        TH1F *hneutron = (TH1F *)file->Get("fhist");
+        double eng = hneutron->GetRandom();
 
-    fParticleGun->SetParticleDefinition(particle);
-    fParticleGun->SetParticleEnergy(10* MeV);
-    fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, -20));
-    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.0, 0.0, 1.0));
+        G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
+        G4ParticleDefinition *particle = particleTable->FindParticle("neutron");
 
+        fParticleGun->SetParticleDefinition(particle);
+        fParticleGun->SetParticleEnergy(eng);
+        fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
+        fParticleGun->SetParticlePosition(G4ThreeVector( 10*G4UniformRand(), 10*G4UniformRand(),0));
     GunType = 0; //a simple flag for gun type: 0 for simple gun, 1 for read from root file.
 }
 

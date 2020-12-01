@@ -29,3 +29,23 @@
 &ensp;see  below, the dark yellow is graphite, red is high density polyethylene, blue is Pb,green is plastic scintillator. I cannot find neccessary parameters to define the PVD, so I just use the predifined Polyethylene Scintillator. And as for the core detector, I replace it by water for simplicity.
  ![](detector-graph.png)
 &ensp; In the future, I'll try to define the scintillator described by the article.
+
+### Interlude -- ROOT
+&ensp; For practical reasons (deadline of meeting), let's first construct a file reading datas from a graph.
+&ensp; See test.C.  We will talk about  the use of "vector" later. It's one kind of data container, where we can store the data. And there are some basic operations we can do on it. One of them is .size(), just as ` for(int i = 0; i< neutronPlot.size()/2;i++)`
+&ensp; So now we know how to draw a histogram from a set of data. Let's talk about how to fill a histogram with random function. In the end,we will talk about how to link root with geant4.
+&ensp;In fact, it's not difiicult to get a random number with the function GetRandom in the class TH1F.
+&ensp; Add this line in the macro(or type it in the bash, if you like, but make sure it's opened)
+```
+TH1F *h= new TH1F("h","example histogram",NUMBEROFBINS,SMALLEST,BIGGIST);
+for(int i =0 ;i <NUMBEROFBINSS; i++) 
+{
+h->Fill(fhist->GetRandom());
+}
+``` 
+### Interlude Out
+
+### Note: 
+1. to know the name of a particle, it's a good idea to see the source code.
+2. Bug :if you create a ntuple, remember to finish it. The template made this mistake and I revised it.
+3. The thing that stored in the ntuple is incorrect. The ntuple ID at the end is wrong; 

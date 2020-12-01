@@ -98,6 +98,7 @@ void MyG4BasedAnalysis::BeginOfRunAction()
     analysisManager->CreateNtupleDColumn("ProcessSub");
     analysisManager->CreateNtupleDColumn("PID");
     analysisManager->CreateNtupleDColumn("ParentID");
+    analysisManager->FinishNtuple();
 
     analysisManager->CreateNtuple("Neutral", "Hits"); // ntuple Id = 2
     analysisManager->CreateNtupleDColumn("X");
@@ -108,6 +109,7 @@ void MyG4BasedAnalysis::BeginOfRunAction()
     analysisManager->CreateNtupleDColumn("PZ");
     analysisManager->CreateNtupleDColumn("PID");
     analysisManager->CreateNtupleDColumn("ParentID");
+ analysisManager->FinishNtuple();
 
     analysisManager->CreateNtuple("Track", "Hits"); // ntuple Id = 3
     analysisManager->CreateNtupleDColumn("TrkLen");
@@ -115,6 +117,7 @@ void MyG4BasedAnalysis::BeginOfRunAction()
     analysisManager->CreateNtupleDColumn("HitsX", fHitsX);
     analysisManager->CreateNtupleDColumn("HitsY", fHitsY);
     analysisManager->CreateNtupleDColumn("HitsZ", fHitsZ);
+ analysisManager->FinishNtuple();
 
     analysisManager->CreateNtuple("NewTrk", "Hits"); // ntuple Id = 4
     analysisManager->CreateNtupleDColumn("Eng");
@@ -193,12 +196,13 @@ G4ClassificationOfNewTrack MyG4BasedAnalysis::ClassifyNewTrack(const G4Track *aT
     //#ANALYSIS 4.1 在生成新Track的时候保存相应数据
 
     //if (aTrack->GetParticleDefinition() == G4Gamma::Gamma())
-    //    return fKill;
+      //  return fKill;
 
     auto analysisManager = G4AnalysisManager::Instance();
+    if(aTrack->GetDefinition()->GetParticleName()=="neutron"){
     analysisManager->FillNtupleDColumn(4, 0, aTrack->GetKineticEnergy());
     analysisManager->AddNtupleRow(4);
-
+    }
     return fUrgent;
 }
 
@@ -363,6 +367,8 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
     //1.2 Step的相关参数
     G4StepPoint *preStepPoint = aStep->GetPreStepPoint();
     G4StepPoint *postStepPoint = aStep->GetPostStepPoint();
+    //if(postStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume()->GetName()=="World")
+   //return ;
 
     //以下是G4Step常见的一些参数获取方法
     {
@@ -444,8 +450,8 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
     //Ntuple1: 保存次级粒子中带电粒子信息
     if (parentID != 0 && charge != 0)
     {
-        //if (aTrack->GetTrackStatus() != fStopAndKill) //只要track停止时的信息
-        //    return;
+        if (aTrack->GetTrackStatus() != fStopAndKill) //只要track停止时的信息
+            return;
 
         //G4cout << "==>"<<proName << G4endl;
         //if (proName != "eIoni") //只要电离过程
@@ -466,32 +472,34 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
     }
 
     //Ntuple2: 保存中性粒子信息：
-    if (charge == 0 && (parentID == 1 && pdgID == 0)) //要求来自入射粒子，且是光子
+    //the original particle specifically
+    if (charge == 0 && parentID == 0 ) //要求来自入射粒子，且是光子
     {
-        if (proName != "Cerenkov") //只要切伦科夫过程
-            return;
+     //   if (proName != "Cerenkov") //只要切伦科夫过程
+       //     return;
 
         auto *pVolume = postStepPoint->GetTouchableHandle()->GetVolume();
         if (pVolume == NULL)
             return;
 
-        G4LogicalVolume *presentVolume = pVolume->GetLogicalVolume();
-        if (presentVolume->GetName() != "FR4BoxVol") //只要光子打到阳极板上的情况
+      G4LogicalVolume *presentVolume = pVolume->GetLogicalVolume();
+       if (presentVolume->GetName() == "World") //只要光子打到阳极板上的情况
             return;
 
         G4double optEng = 0.0012398 / aTrack->GetKineticEnergy(); //convert to [nm]
         G4double optX = postPos.x();
         G4double optY = postPos.y();
         G4double optZ = postPos.z();
-
+        //G4int parentID = aTrack->GetParentID();
         auto analysisManager = G4AnalysisManager::Instance();
-        analysisManager->FillNtupleDColumn(0, 0, optEng);
-        analysisManager->FillNtupleDColumn(0, 1, optX);
-        analysisManager->FillNtupleDColumn(0, 2, optY);
-        analysisManager->FillNtupleDColumn(0, 3, optZ);
-        analysisManager->FillNtupleDColumn(0, 4, aTrack->GetVertexPosition().x());
-        analysisManager->FillNtupleDColumn(0, 5, aTrack->GetVertexPosition().y());
-        analysisManager->FillNtupleDColumn(0, 6, aTrack->GetVertexPosition().z());
+        //analysisManager->FillNtupleDColumn(2, 0, optEng);
+        analysisManager->FillNtupleDColumn(2, 0, optX);
+        analysisManager->FillNtupleDColumn(2, 1, optY);
+        analysisManager->FillNtupleDColumn(2, 2, optZ);
+        analysisManager->FillNtupleDColumn(2, 3, aTrack->GetVertexPosition().x());
+        analysisManager->FillNtupleDColumn(2, 4, aTrack->GetVertexPosition().y());
+        analysisManager->FillNtupleDColumn(2, 5, aTrack->GetVertexPosition().z());
+         analysisManager->FillNtupleDColumn(2, 7, aTrack->GetParentID());
         analysisManager->AddNtupleRow(2);
     }
 
