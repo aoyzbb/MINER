@@ -35,6 +35,8 @@ public:
 
 private:
     int GunType;
+    TFile *file = NULL;
+    TH1F *engHist = NULL;
 };
 
 #endif

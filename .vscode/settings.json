@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.gdml": "xml",
         "axis": "cpp",
         "*.icc": "cpp",
         "new": "cpp",
@@ -14,7 +15,8 @@
         "qrot": "cpp",
         "complex": "cpp",
         "vec3": "cpp",
-        "event": "cpp"
+        "event": "cpp",
+        "test.C": "cpp"
     },
     "cmake.configureOnOpen": false
 }

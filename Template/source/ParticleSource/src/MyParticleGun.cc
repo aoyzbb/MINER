@@ -36,17 +36,16 @@ MyParticleGun::MyParticleGun()
     fParticleGun = new G4ParticleGun(n_particle);
 
     //#PartGun 2. 初始化变量
-   TFile *file = new TFile("neutronFlux.root");
-        TH1F *hneutron = (TH1F *)file->Get("fhist");
-        double eng = hneutron->GetRandom();
+    file = new TFile("neutronFlux.root");
+    engHist = (TH1F *)file->Get("fhist");
 
-        G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
-        G4ParticleDefinition *particle = particleTable->FindParticle("neutron");
+    G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
+    G4ParticleDefinition *particle = particleTable->FindParticle("gamma");
 
-        fParticleGun->SetParticleDefinition(particle);
-        fParticleGun->SetParticleEnergy(eng);
-        fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
-        fParticleGun->SetParticlePosition(G4ThreeVector( 10*G4UniformRand(), 10*G4UniformRand(),0));
+    fParticleGun->SetParticleDefinition(particle);
+    fParticleGun->SetParticleEnergy(1.);
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
+    fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, 0));
     GunType = 0; //a simple flag for gun type: 0 for simple gun, 1 for read from root file.
 }
 
@@ -98,6 +97,10 @@ void MyParticleGun::GeneratePrimaries(G4Event *anEvent)
     if (GunType == 0)
     {
         //单粒子控制, 可配合随机抽样函数来进行： G4UniformRand()给出[0~1]随机数
+        double eng = engHist->GetRandom();
+        fParticleGun->SetParticleEnergy(eng);
+        fParticleGun->SetParticlePosition(G4ThreeVector(G4UniformRand()*150, G4UniformRand()*150, -132.8));
+        fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
     }
     else
     {

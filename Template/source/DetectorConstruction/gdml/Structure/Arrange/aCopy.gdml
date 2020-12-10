@@ -24,55 +24,55 @@
 
 	<define>
 		<!-- Graphite box -->
-		<variable name="GraX" value="440" />
-		<variable name="GraY" value="440" />
-		<variable name="GraZ" value="265.6" />
+		<variable name="GraX" value="440*2" />
+		<variable name="GraY" value="440*2" />
+		<variable name="GraZ" value="265.6*2.54" />
 
 		<!-- Borated box -->
-		<variable name="BoraX" value="500" />
-		<variable name="BoraY" value="500" />
-		<variable name="BoraZ" value="543" />
+		<variable name="BoraX" value="500*2" />
+		<variable name="BoraY" value="500*2" />
+		<variable name="BoraZ" value="543*2.54" />
 
 		<!--Lead first-->
-		<variable name="Lead0_X" value="620"/>
-		<variable name="Lead0_Y" value="620"/>
-		<variable name="Lead0_Z" value="120"/>
+		<variable name="Lead0_X" value="620*2"/>
+		<variable name="Lead0_Y" value="620*2"/>
+		<variable name="Lead0_Z" value="120*2.54"/>
 
 		<!--Borated2-->>
-		<variable name="Bora2_X" value="620" />
-		<variable name="Bora2_Y" value="620" />
-		<variable name="Bora2_Z" value="530" />
+		<variable name="Bora2_X" value="620*2" />
+		<variable name="Bora2_Y" value="620*2" />
+		<variable name="Bora2_Z" value="530*2.54" />
 
 		<!--Lead second-->
-		<variable name="Lead1_X" value="620"/>
-		<variable name="Lead1_Y" value="20"/>
-		<variable name="Lead1_Z" value="450"/>
-		<variable name="Bora3_Z" value="80"/>
+		<variable name="Lead1_X" value="620*2"/>
+		<variable name="Lead1_Y" value="20*2"/>
+		<variable name="Lead1_Z" value="450*2.54"/>
+		<variable name="Bora3_Z" value="80*2.54"/>
 
 		<!--scitillator-->
-		<variable name="SciPlaX" value="620"/>
-		<variable name="SciPlaY" value="580"/>
-		<variable name="SciPlaZ" value="450"/>
+		<variable name="SciPlaX" value="620*2"/>
+		<variable name="SciPlaY" value="580*2"/>
+		<variable name="SciPlaZ" value="450*2.54"/>
 
 		<!-- Borated box 4 -->
-		<variable name="Bora4_X" value="420" />
-		<variable name="Bora4_Y" value="420" />
-		<variable name="Bora4_Z" value="380" />
+		<variable name="Bora4_X" value="420*2" />
+		<variable name="Bora4_Y" value="420*2" />
+		<variable name="Bora4_Z" value="380*2.54" />
 
 		<!--Lead  third-->
-		<variable name="Lead3_X" value="260"/>
-		<variable name="Lead3_Y" value="260"/>
-		<variable name="Lead3_Z" value="290"/>
+		<variable name="Lead3_X" value="260*2"/>
+		<variable name="Lead3_Y" value="260*2"/>
+		<variable name="Lead3_Z" value="290*2.54"/>
 
 		<!-- Borated box 5 -->
-		<variable name="Bora5_X" value="220" />
-		<variable name="Bora5_Y" value="220" />
-		<variable name="Bora5_Z" value="250" />
+		<variable name="Bora5_X" value="220*2" />
+		<variable name="Bora5_Y" value="220*2" />
+		<variable name="Bora5_Z" value="250*2.54" />
 
 		<!--Core Detector -->
-		<variable name="DetecX" value="180" />
-		<variable name="DetecY" value="180" />
-		<variable name="DetecZ" value="210" />
+		<variable name="DetecX" value="180*2" />
+		<variable name="DetecY" value="180*2" />
+		<variable name="DetecZ" value="210*2.54" />
 
 		<variable name="Offset" value="0"/>
 

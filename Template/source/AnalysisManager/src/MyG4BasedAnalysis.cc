@@ -109,7 +109,7 @@ void MyG4BasedAnalysis::BeginOfRunAction()
     analysisManager->CreateNtupleDColumn("PZ");
     analysisManager->CreateNtupleDColumn("PID");
     analysisManager->CreateNtupleDColumn("ParentID");
- analysisManager->FinishNtuple();
+    analysisManager->FinishNtuple();
 
     analysisManager->CreateNtuple("Track", "Hits"); // ntuple Id = 3
     analysisManager->CreateNtupleDColumn("TrkLen");
@@ -117,7 +117,7 @@ void MyG4BasedAnalysis::BeginOfRunAction()
     analysisManager->CreateNtupleDColumn("HitsX", fHitsX);
     analysisManager->CreateNtupleDColumn("HitsY", fHitsY);
     analysisManager->CreateNtupleDColumn("HitsZ", fHitsZ);
- analysisManager->FinishNtuple();
+    analysisManager->FinishNtuple();
 
     analysisManager->CreateNtuple("NewTrk", "Hits"); // ntuple Id = 4
     analysisManager->CreateNtupleDColumn("Eng");
@@ -196,12 +196,13 @@ G4ClassificationOfNewTrack MyG4BasedAnalysis::ClassifyNewTrack(const G4Track *aT
     //#ANALYSIS 4.1 在生成新Track的时候保存相应数据
 
     //if (aTrack->GetParticleDefinition() == G4Gamma::Gamma())
-      //  return fKill;
+    //  return fKill;
 
     auto analysisManager = G4AnalysisManager::Instance();
-    if(aTrack->GetDefinition()->GetParticleName()=="neutron"){
-    analysisManager->FillNtupleDColumn(4, 0, aTrack->GetKineticEnergy());
-    analysisManager->AddNtupleRow(4);
+    if (aTrack->GetDefinition()->GetParticleName() == "gamma" && aTrack->GetParentID() == 0)
+    {
+        analysisManager->FillNtupleDColumn(4, 0, aTrack->GetKineticEnergy());
+        analysisManager->AddNtupleRow(4);
     }
     return fUrgent;
 }
@@ -368,7 +369,7 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
     G4StepPoint *preStepPoint = aStep->GetPreStepPoint();
     G4StepPoint *postStepPoint = aStep->GetPostStepPoint();
     //if(postStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume()->GetName()=="World")
-   //return ;
+    //return ;
 
     //以下是G4Step常见的一些参数获取方法
     {
@@ -446,9 +447,33 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
     G4String proName = postStepPoint->GetProcessDefinedStep()->GetProcessName();
     G4ProcessType proType = postStepPoint->GetProcessDefinedStep()->GetProcessType();
     G4int proSubType = postStepPoint->GetProcessDefinedStep()->GetProcessSubType();
-
+    auto *pVolume = postStepPoint->GetTouchableHandle()->GetVolume();
+    if (pVolume == NULL)
+        return;
+    auto *pVolume2 = preStepPoint->GetTouchableHandle()->GetVolume();
+    if (pVolume == NULL)
+        return;
+    G4LogicalVolume *lVolume1 = postStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
+    G4LogicalVolume *lVolume2 = preStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
+    //G4LogicalVolume *fLogicVol = G4LogicalVolumeStore::GetInstance()->GetVolume("DetecBoxVol");
+    if (lVolume1->GetName()=="DetecBoxVol"&&lVolume2->GetName()=="DetecBoxVol")
+    { //if(lVolume2 =fLogicVol)
+        //return;
+        auto analysisManager = G4AnalysisManager::Instance();
+        analysisManager->FillNtupleDColumn(1, 0, postPos.x());
+        analysisManager->FillNtupleDColumn(1, 1, postPos.y());
+        analysisManager->FillNtupleDColumn(1, 2, postPos.z());
+        analysisManager->FillNtupleDColumn(1, 3, postMomtum.x());
+        analysisManager->FillNtupleDColumn(1, 4, postMomtum.y());
+        analysisManager->FillNtupleDColumn(1, 5, postMomtum.z());
+        analysisManager->FillNtupleDColumn(1, 6, double(proType));
+        analysisManager->FillNtupleDColumn(1, 7, double(proSubType));
+        analysisManager->FillNtupleDColumn(1, 8, double(pdgID));
+        analysisManager->FillNtupleDColumn(1, 9, double(parentID));
+        analysisManager->AddNtupleRow(1);
+    }
     //Ntuple1: 保存次级粒子中带电粒子信息
-    if (parentID != 0 && charge != 0)
+   /* if (parentID != 0 && charge != 0)
     {
         if (aTrack->GetTrackStatus() != fStopAndKill) //只要track停止时的信息
             return;
@@ -470,20 +495,20 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
         analysisManager->FillNtupleDColumn(1, 9, double(parentID));
         analysisManager->AddNtupleRow(1);
     }
-
+*/
     //Ntuple2: 保存中性粒子信息：
     //the original particle specifically
-    if (charge == 0 && parentID == 0 ) //要求来自入射粒子，且是光子
+    if (charge == 0 && parentID == 0) //要求来自入射粒子，且是光子
     {
-     //   if (proName != "Cerenkov") //只要切伦科夫过程
-       //     return;
+        //   if (proName != "Cerenkov") //只要切伦科夫过程
+        //     return;
 
         auto *pVolume = postStepPoint->GetTouchableHandle()->GetVolume();
         if (pVolume == NULL)
             return;
 
-      G4LogicalVolume *presentVolume = pVolume->GetLogicalVolume();
-       if (presentVolume->GetName() == "World") //只要光子打到阳极板上的情况
+        G4LogicalVolume *presentVolume = pVolume->GetLogicalVolume();
+        if (presentVolume->GetName() == "World") //只要光子打到阳极板上的情况
             return;
 
         G4double optEng = 0.0012398 / aTrack->GetKineticEnergy(); //convert to [nm]
@@ -499,7 +524,7 @@ void MyG4BasedAnalysis::SteppingAction(const G4Step *aStep)
         analysisManager->FillNtupleDColumn(2, 3, aTrack->GetVertexPosition().x());
         analysisManager->FillNtupleDColumn(2, 4, aTrack->GetVertexPosition().y());
         analysisManager->FillNtupleDColumn(2, 5, aTrack->GetVertexPosition().z());
-         analysisManager->FillNtupleDColumn(2, 7, aTrack->GetParentID());
+        analysisManager->FillNtupleDColumn(2, 7, aTrack->GetParentID());
         analysisManager->AddNtupleRow(2);
     }
 

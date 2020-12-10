@@ -33,4 +33,4 @@
 #/gun/particle mu-
 #/gun/direction 1 0 0
 #/gun/energy 1 GeV
-/run/beamOn 1000
+/run/beamOn 100000

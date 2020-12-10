@@ -6,7 +6,7 @@
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmDelete": false,
     "workbench.iconTheme": "vscode-great-icons",
-    "workbench.colorTheme": "Atom One Light",
+    "workbench.colorTheme": "Monokai Pro (Filter Spectrum)",
     "workbench.activityBar.visible": true,
     "editor.minimap.enabled": true,
     "breadcrumbs.enabled": true,
@@ -144,6 +144,7 @@
 
     ],
     "files.associations": {
+        "*.gdml": "xml",
         "_tess": "cpp",
         "*.icc": "cpp",
         "iosfwd": "cpp",
@@ -231,7 +232,8 @@
         "typedefs": "cpp",
         "__functional_base_03": "cpp",
         "branch_element": "cpp",
-        "style_parser": "cpp"
+        "style_parser": "cpp",
+        "test.C": "cpp"
     },
     "cmake.configureOnOpen": false
 }
